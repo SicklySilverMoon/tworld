@@ -90,7 +90,7 @@ bool TileWorldApp::Initialize(bool bSilence, int nSoundBufSize,
 		_generictimerinitialize(bShowHistogram) &&
 		_generictileinitialize() &&
 		_genericinputinitialize() &&
-		_sdlsfxinitialize(bSilence, nSoundBufSize)
+        initaudiosystem(bSilence, nSoundBufSize)
 	   ) )
 		return false;
 	

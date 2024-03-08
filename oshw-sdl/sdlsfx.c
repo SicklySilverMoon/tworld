@@ -359,7 +359,7 @@ static void shutdown(void)
 /* Initialize the module. If silence is TRUE, then the program will
  * leave sound output disabled.
  */
-int _sdlsfxinitialize(int silence, int _soundbufsize)
+int initaudiosystem(int silence, int _soundbufsize)
 {
     atexit(shutdown);
     enabled = !silence;

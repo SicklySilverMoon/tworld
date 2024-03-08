@@ -265,6 +265,10 @@ OSHW_EXTERN int displayinputprompt(char const *prompt, char *input, int maxlen,
  * Sound functions.
  */
 
+/* Init the audio system as needed.
+ */
+OSHW_EXTERN int initaudiosystem(int silence, int _soundbufsize);
+
 /* Activate or deactivate the sound system. The return value is TRUE
  * if the sound system is (or already was) active.
  */

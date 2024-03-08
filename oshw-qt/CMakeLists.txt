@@ -1,13 +1,9 @@
-add_library(oshw-qt STATIC ""
-        TWTextCoder.cpp
-        TWTextCoder.h)
+add_library(oshw-qt STATIC "")
 target_sources(oshw-qt PRIVATE
     ../generic/generic.h
     ../generic/_in.cpp
     ../generic/tile.c
     ../generic/timer.c
-    ../oshw-sdl/sdlsfx.h
-    ../oshw-sdl/sdlsfx.c
     oshwbind.h
     oshwbind.cpp
     CCMetaData.h
@@ -21,6 +17,9 @@ target_sources(oshw-qt PRIVATE
     TWMainWnd.ui
     TWProgressBar.h
     TWProgressBar.cpp
+    TWTextCoder.cpp
+    TWTextCoder.h
+    TWSoundPlayer.cpp
 )
 
 target_include_directories(oshw-qt PRIVATE
@@ -31,9 +30,10 @@ target_include_directories(oshw-qt PRIVATE
 )
 
 target_link_libraries(oshw-qt PUBLIC
-    ${SDL_LIBRARY}
+#    ${SDL_LIBRARY}
     Qt::Core
     Qt::Gui
     Qt::Widgets
     Qt::Xml
+    Qt::Multimedia
 )

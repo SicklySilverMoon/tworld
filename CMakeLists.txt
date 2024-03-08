@@ -3,7 +3,7 @@
 # Copyright (C) 2020 by Michael Hansen, under the GNU General Public
 # License. No warranty. See COPYING for details.
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.5)
 project(tworld)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -26,7 +26,7 @@ if(OSHW STREQUAL "qt")
     set(CMAKE_AUTOUIC TRUE)
     set(CMAKE_AUTOMOC TRUE)
     set(CMAKE_AUTORCC TRUE)
-    find_package(Qt6 COMPONENTS Core Gui Widgets Xml)
+    find_package(Qt6 COMPONENTS Core Gui Widgets Xml Multimedia)
     if(NOT Qt6_FOUND)
         find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Xml)
         if(Qt5_FOUND AND NOT TARGET Qt::Core)
@@ -39,6 +39,8 @@ if(OSHW STREQUAL "qt")
             set_target_properties(Qt::Widgets PROPERTIES INTERFACE_LINK_LIBRARIES "Qt5::Widgets")
             add_library(Qt::Xml INTERFACE IMPORTED)
             set_target_properties(Qt::Xml PROPERTIES INTERFACE_LINK_LIBRARIES "Qt5::Xml")
+            add_library(Qt::Multimedia INTERFACE IMPORTED)
+            set_target_properties(Qt::Multimedia PROPERTIES INTERFACE_LINK_LIBRARIES "Qt5::Multimedia")
         endif()
     endif()
     add_definitions(-DTWPLUSPLUS)
