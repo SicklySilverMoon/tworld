@@ -23,6 +23,8 @@
 #include <QLocale>
 
 class QSortFilterProxyModel;
+class QAudioOutput;
+class QSoundEffect;
 
 class TileWorldMainWnd : public QMainWindow, protected Ui::TWMainWnd
 {
@@ -58,7 +60,15 @@ public:
 			InputPromptType eInputType, int (*pfnInputCallback)());
 	int GetSelectedRuleset();
 	void SetSubtitle(const char* szSubtitle);
-	
+
+	void EnableAudio(bool bEnabled);
+	bool LoadSoundEffect(int index, const char* szFilename);
+	void FreeSoundEffect(int index);
+	void PlaySoundEffect(int index);
+	void StopSoundEffect(int index);
+	void SetAudioVolume(qreal fVolume);
+	qreal GetAudioVolume() const { return m_fVolume; }
+
 	void ReadExtensions(gameseries* pSeries);
 	void Narrate(CCX::Text CCX::Level::*pmTxt, bool bForce = false);
 	
@@ -99,7 +109,12 @@ private:
 	Qt_Surface* m_pSurface;
 	Qt_Surface* m_pInvSurface;
 	TW_Rect m_disploc;
-	
+
+	//QAudioOutput* m_pAudioOut;
+	bool m_bEnableAudio;
+	qreal m_fVolume;
+	QVector<QSoundEffect*> m_sounds;
+
 	uint8_t m_nKeyState[TWK_LAST];
 
 	struct MessageData{ QString sMsg; uint32_t nMsgUntil, nMsgBoldUntil; };

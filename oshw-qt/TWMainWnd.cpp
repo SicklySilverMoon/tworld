@@ -54,10 +54,21 @@ extern int pedanticmode;
 #include <QString>
 #include <QTextStream>
 
+#include <QThread>
+#include <QSoundEffect>
+#include <QAudioOutput>
+
 #include <vector>
 
 #include <cstring>
 #include <cctype>
+
+/* Some generic default settings for the audio output.
+ */
+#define DEFAULT_SND_FREQ	22050
+#define DEFAULT_SND_CHAN	1
+#define DEFAULT_SND_SIZE	16
+#define DEFAULT_SND_TYPE	QAudioFormat::SignedInt
 
 class TWStyledItemDelegate : public QStyledItemDelegate
 {
@@ -205,6 +216,8 @@ TileWorldMainWnd::TileWorldMainWnd(QWidget* pParent, Qt::WindowFlags flags)
 	m_bWindowClosed(false),
 	m_pSurface(),
 	m_pInvSurface(),
+	m_bEnableAudio(false),
+	m_fVolume(1.0),
 	m_nKeyState(),
 	m_shortMessages(),
 	m_bKbdRepeatEnabled(true),
@@ -244,7 +257,15 @@ TileWorldMainWnd::TileWorldMainWnd(QWidget* pParent, Qt::WindowFlags flags)
 	m_pTblList->setItemDelegate(new TWStyledItemDelegate(m_pTblList));
 	
 	m_pTextBrowser->setSearchPaths(QStringList{ QString::fromLocal8Bit(seriesdatdir) });
-	
+
+	m_sounds.resize(SND_COUNT);
+	/*QAudioFormat audioFormat;
+	audioFormat.setSampleRate(DEFAULT_SND_FREQ);
+	audioFormat.setChannelCount(DEFAULT_SND_CHAN);
+	audioFormat.setSampleSize(DEFAULT_SND_SIZE);
+	audioFormat.setSampleType(DEFAULT_SND_TYPE);
+	m_pAudioOut = new QAudioOutput(audioFormat, this);*/
+
 	g_pApp->installEventFilter(this);
 
 	connect(m_pTblList, &QTableView::activated, this, &TileWorldMainWnd::OnListItemActivated);
@@ -1363,6 +1384,166 @@ void TileWorldMainWnd::SetSubtitle(const char* szSubtitle)
 	if (szSubtitle && *szSubtitle)
 		sTitle += QStringLiteral(" - ") + TWTextCoder::decode(szSubtitle);
 	setWindowTitle(sTitle);
+}
+
+
+/* Activate or deactivate the sound system. Qt manages this for us, so
+ * we need only track whether it's enabled by the game engine.
+ */
+int setaudiosystem(int active)
+{
+	g_pMainWnd->EnableAudio(!!active);
+	return TRUE;
+}
+
+void TileWorldMainWnd::EnableAudio(bool bEnabled)
+{
+	m_bEnableAudio = bEnabled;
+}
+
+/* Load a single wave file into memory. The wave data is converted to
+ * the format expected by the sound device.
+ */
+int loadsfxfromfile(int index, char const *filename)
+{
+	return g_pMainWnd->LoadSoundEffect(index, filename);
+}
+
+bool TileWorldMainWnd::LoadSoundEffect(int index, const char* szFilename)
+{
+	if (index < 0 || index >= m_sounds.size())
+		return false;
+
+	freesfx(index);
+	if (szFilename)
+	{
+		QSoundEffect* pSoundEffect = new QSoundEffect(this);
+		pSoundEffect->setSource(QUrl::fromLocalFile(QString::fromLocal8Bit(szFilename)));
+		pSoundEffect->setVolume(m_fVolume);
+		m_sounds[index] = pSoundEffect;
+	}
+
+	return true;
+}
+
+/* Release all memory for the given sound effect.
+ */
+void freesfx(int index)
+{
+	g_pMainWnd->FreeSoundEffect(index);
+}
+
+void TileWorldMainWnd::FreeSoundEffect(int index)
+{
+	if (index < 0 || index >= m_sounds.size())
+		return;
+
+	if (m_sounds[index])
+	{
+		// Defer deletion in case the effect is still playing.
+		m_sounds[index]->deleteLater();
+		m_sounds[index] = nullptr;
+	}
+}
+
+/* Set the current volume level to v. If display is true, the
+ * new volume level is displayed to the user.
+ */
+int setvolume(int v, int display)
+{
+	if (v < 0)
+		v = 0;
+	else if (v > 10)
+		v = 10;
+	setintsetting("volume", v);
+
+	// Qt uses a floating-point volume in [0.0, 1.0]
+	g_pMainWnd->SetAudioVolume(qreal(v) / 10.0);
+
+	if (display) {
+		char  buf[16];
+		snprintf(buf, sizeof(buf), "Volume: %d", v);
+		setdisplaymsg(buf, 1000, 1000);
+	}
+	return TRUE;
+}
+
+void TileWorldMainWnd::SetAudioVolume(qreal fVolume)
+{
+	m_fVolume = fVolume;
+	for (QSoundEffect* pSoundEffect : m_sounds)
+	{
+		if (pSoundEffect)
+			pSoundEffect->setVolume(fVolume);
+	}
+}
+
+/* Change the current volume level by delta. If display is true, the
+ * new volume level is displayed to the user.
+ */
+int changevolume(int delta, int display)
+{
+	int volume = int(g_pMainWnd->GetAudioVolume() * 10.0);
+	return setvolume(volume + delta, display);
+}
+
+/* If action is negative, stop playing all sounds immediately.
+ * Otherwise, just temporarily pause or unpause sound-playing.
+ */
+void setsoundeffects(int action)
+{
+	if (action < 0)
+	{
+		for (int i = 0; i < SND_COUNT; ++i)
+			g_pMainWnd->StopSoundEffect(i);
+	}
+	else
+	{
+		// TODO
+	}
+}
+
+/* Select the sounds effects to be played. sfx is a bitmask of sound
+ * effect indexes. Any continuous sounds that are not included in sfx
+ * are stopped. One-shot sounds that are included in sfx are
+ * restarted.
+ */
+void playsoundeffects(unsigned long sfx)
+{
+	int i;
+	unsigned long flag;
+	for (i = 0, flag = 1u; i < SND_COUNT; ++i, flag <<= 1)
+	{
+		if (sfx & flag)
+			g_pMainWnd->PlaySoundEffect(i);
+		else if (i >= SND_ONESHOT_COUNT)
+			g_pMainWnd->StopSoundEffect(i);
+	}
+}
+
+void TileWorldMainWnd::PlaySoundEffect(int index)
+{
+	if (index < 0 || index >= m_sounds.size())
+		return;
+
+	QSoundEffect* pSoundEffect = m_sounds[index];
+	if (pSoundEffect)
+	{
+		if (index >= SND_ONESHOT_COUNT)
+			pSoundEffect->setLoopCount(QSoundEffect::Infinite);
+		if (index < SND_ONESHOT_COUNT || !pSoundEffect->isPlaying())
+			pSoundEffect->play();
+	}
+}
+
+void TileWorldMainWnd::StopSoundEffect(int index)
+{
+	if (index < 0 || index >= m_sounds.size())
+		return;
+
+	QSoundEffect* pSoundEffect = m_sounds[index];
+	if (pSoundEffect && pSoundEffect->isPlaying())
+		pSoundEffect->setLoopCount(0);
 }
 
 
