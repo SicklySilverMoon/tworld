@@ -4,6 +4,7 @@
 
 #include "TWMainWnd.h"
 #include "TWApp.h"
+#include "TWTextCoder.h"
 
 #include "../generic/generic.h"
 
@@ -17,7 +18,6 @@
 #include "../oshw.h"
 #include "../err.h"
 #include "../help.h"
-#include "TWTextCoder.h"
 
 extern int pedanticmode;
 
@@ -1368,7 +1368,6 @@ void ding(void)
 	QApplication::beep();
 }
 
-
 /* Set the program's subtitle. A NULL subtitle is equivalent to the
  * empty string. The subtitle is displayed in the window dressing (if
  * any).
@@ -1417,7 +1416,7 @@ bool TileWorldMainWnd::LoadSoundEffect(int index, const char* szFilename)
 	freesfx(index);
 	if (szFilename)
 	{
-		QSoundEffect* pSoundEffect = new QSoundEffect(this);
+        TWSoundEffect* pSoundEffect = new TWSoundEffect(this);
 		pSoundEffect->setSource(QUrl::fromLocalFile(QString::fromLocal8Bit(szFilename)));
 		pSoundEffect->setVolume(m_fVolume);
 		m_sounds[index] = pSoundEffect;
@@ -1499,7 +1498,16 @@ void setsoundeffects(int action)
 	}
 	else
 	{
-		// TODO
+        if (!action)
+        {
+            for (int i = 0; i < SND_COUNT; ++i)
+                g_pMainWnd->PauseSoundEffect(i);
+        }
+        else
+        {
+            for (int i = 0; i < SND_COUNT; ++i)
+                g_pMainWnd->ResumeSoundEffect(i);
+        }
 	}
 }
 
@@ -1510,6 +1518,7 @@ void setsoundeffects(int action)
  */
 void playsoundeffects(unsigned long sfx)
 {
+    //todo: display the onomatopoeia if volume is 0 or audio is disabled
 	int i;
 	unsigned long flag;
 	for (i = 0, flag = 1u; i < SND_COUNT; ++i, flag <<= 1)
@@ -1544,6 +1553,32 @@ void TileWorldMainWnd::StopSoundEffect(int index)
 	QSoundEffect* pSoundEffect = m_sounds[index];
 	if (pSoundEffect && pSoundEffect->isPlaying())
 		pSoundEffect->setLoopCount(0);
+}
+
+void TileWorldMainWnd::PauseSoundEffect(int index) {
+    TWSoundEffect* pSoundEffect = m_sounds[index];
+    if (pSoundEffect)
+        pSoundEffect->pause();
+}
+
+void TileWorldMainWnd::ResumeSoundEffect(int index) {
+    TWSoundEffect* pSoundEffect = m_sounds[index];
+    if (pSoundEffect)
+        pSoundEffect->resume();
+}
+
+void TileWorldMainWnd::TWSoundEffect::pause() {
+    if (isPlaying()) {
+        m_paused = true;
+        stop();
+    }
+}
+
+void TileWorldMainWnd::TWSoundEffect::resume() {
+    if (m_paused) {
+        m_paused = false;
+        play();
+    }
 }
 
 

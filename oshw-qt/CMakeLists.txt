@@ -17,6 +17,8 @@ target_sources(oshw-qt PRIVATE
     TWMainWnd.ui
     TWProgressBar.h
     TWProgressBar.cpp
+    TWTextCoder.cpp
+    TWTextCoder.h
 )
 
 target_include_directories(oshw-qt PRIVATE

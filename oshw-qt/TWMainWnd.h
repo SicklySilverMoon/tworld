@@ -19,12 +19,11 @@
 #include "../oshw.h"
 
 #include <QMainWindow>
-
+#include <QSoundEffect>
 #include <QLocale>
 
 class QSortFilterProxyModel;
 class QAudioOutput;
-class QSoundEffect;
 
 class TileWorldMainWnd : public QMainWindow, protected Ui::TWMainWnd
 {
@@ -37,6 +36,16 @@ public:
 		PAGE_TABLE,
 		PAGE_TEXT
 	};
+
+    class TWSoundEffect : public QSoundEffect {
+    private:
+        bool m_paused = false;
+    public:
+        explicit TWSoundEffect(QObject* obj) : QSoundEffect{obj} {};
+
+        void pause();
+        void resume();
+    };
 
 	TileWorldMainWnd(QWidget* pParent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 	~TileWorldMainWnd();
@@ -66,6 +75,8 @@ public:
 	void FreeSoundEffect(int index);
 	void PlaySoundEffect(int index);
 	void StopSoundEffect(int index);
+	void PauseSoundEffect(int index);
+	void ResumeSoundEffect(int index);
 	void SetAudioVolume(qreal fVolume);
 	qreal GetAudioVolume() const { return m_fVolume; }
 
@@ -113,7 +124,7 @@ private:
 	//QAudioOutput* m_pAudioOut;
 	bool m_bEnableAudio;
 	qreal m_fVolume;
-	QVector<QSoundEffect*> m_sounds;
+	QVector<TWSoundEffect*> m_sounds;
 
 	uint8_t m_nKeyState[TWK_LAST];
 
