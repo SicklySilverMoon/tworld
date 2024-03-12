@@ -15,7 +15,7 @@ jobs:
           cd sdl2-2.30.1 && mkdir build && cd build
           cmake ..
           cmake --build .
-          cmake --install . --prefix /usr/local/
+          sudo cmake --install . --prefix /usr/local/
 
   build-qt6:
     needs:
