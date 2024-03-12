@@ -31,7 +31,8 @@ jobs:
        run: |
          mkdir build-qt6 && cd build-qt6
          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
+           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 \
+           -DCMAKE_PREFIX_PATH /usr/local/ ..
          make -j2 && make install
 
   build-qt5:
@@ -48,7 +49,8 @@ jobs:
         run: |
           mkdir build-qt5 && cd build-qt5
           cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 ..
+            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 \
+            -DCMAKE_PREFIX_PATH /usr/local/ ..
           make -j2 && make install
 
   build-sdl1:
