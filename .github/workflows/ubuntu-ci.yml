@@ -9,12 +9,6 @@ jobs:
         run: |
           sudo apt update
           sudo apt install libsdl2-dev
-      - name: Build tworld2 (Qt6)
-        run: |
-          mkdir build-qt6 && cd build-qt6
-          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
-          make -j2 && make install
 
   build-qt6:
     needs:
