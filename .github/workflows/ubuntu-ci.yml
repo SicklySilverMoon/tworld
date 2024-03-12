@@ -5,10 +5,17 @@ jobs:
   install-sdl2:
     runs-on: ubuntu-latest
     steps:
-      - name: Install SDL2
+      - uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          path: sdl2-2.30.1
+          ref: release-2.30.1
+      - name: Clone, Build, & Install SDL2
         run: |
-          sudo apt update
-          sudo apt install libsdl2-dev
+          cd sdl2-2.30.1
+          cmake ..
+          cmake --build
+          cmake --install
 
   build-qt6:
     needs:
