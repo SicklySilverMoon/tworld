@@ -455,7 +455,7 @@ bool TileWorldMainWnd::HandleEvent(QObject* pObject, QEvent* pEvent)
 			if (pObject != m_pGameWidget)
 				return false;
 			QMouseEvent* pMouseEvent = static_cast<QMouseEvent*>(pEvent);
-			mouseeventcallback(pMouseEvent->x(), pMouseEvent->y(), pMouseEvent->button(),
+			mouseeventcallback(pMouseEvent->pos().x(), pMouseEvent->pos().y(), pMouseEvent->button(),
 				(eType == QEvent::MouseButtonPress));
 			return true;
 		}

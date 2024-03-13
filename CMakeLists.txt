@@ -3,7 +3,7 @@
 # Copyright (C) 2020 by Michael Hansen, under the GNU General Public
 # License. No warranty. See COPYING for details.
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.20)
 project(tworld)
 
 set(CMAKE_CXX_STANDARD 11)

@@ -1,6 +1,4 @@
-add_library(oshw-qt STATIC ""
-        TWTextCoder.cpp
-        TWTextCoder.h)
+add_library(oshw-qt STATIC "")
 target_sources(oshw-qt PRIVATE
     ../generic/generic.h
     ../generic/_in.cpp
@@ -21,6 +19,8 @@ target_sources(oshw-qt PRIVATE
     TWMainWnd.ui
     TWProgressBar.h
     TWProgressBar.cpp
+    TWTextCoder.cpp
+    TWTextCoder.h
 )
 
 target_include_directories(oshw-qt PRIVATE
