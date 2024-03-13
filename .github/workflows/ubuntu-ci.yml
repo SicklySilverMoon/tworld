@@ -5,17 +5,12 @@ jobs:
   install-sdl2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: libsdl-org/setup-sdl@main
+        id: sdl
         with:
-          repository: libsdl-org/SDL
-          path: sdl2-2.30.1
-          ref: release-2.30.1
-      - name: Clone, Build, & Install SDL2
-        run: |
-          cd sdl2-2.30.1 && mkdir build && cd build
-          cmake ..
-          cmake --build .
-          sudo cmake --install . --prefix $GITHUB_WORKSPACE/dist-sdl2
+          install-linux-dependencies: true
+          version: 2-latest
+          version-sdl-image: 2-latest
 
   build-qt6:
     needs:
@@ -31,8 +26,7 @@ jobs:
        run: |
          mkdir build-qt6 && cd build-qt6
          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 \
-           -DSDL2_DIR=$GITHUB_WORKSPACE/dist-sdl2/lib/cmake/SDL2/ ..
+           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
          make -j2 && make install
 
   build-qt5:
@@ -49,8 +43,7 @@ jobs:
         run: |
           mkdir build-qt5 && cd build-qt5
           cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 \
-            -DSDL2_DIR=$GITHUB_WORKSPACE/dist-sdl2/lib/cmake/SDL2/ ..
+            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 ..
           make -j2 && make install
 
   build-sdl1:
