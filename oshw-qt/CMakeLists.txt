@@ -4,8 +4,6 @@ target_sources(oshw-qt PRIVATE
     ../generic/_in.cpp
     ../generic/tile.c
     ../generic/timer.c
-    ../oshw-sdl/sdlsfx.h
-    ../oshw-sdl/sdlsfx.c
     oshwbind.h
     oshwbind.cpp
     CCMetaData.h
@@ -21,13 +19,14 @@ target_sources(oshw-qt PRIVATE
     TWProgressBar.cpp
     TWTextCoder.cpp
     TWTextCoder.h
+    TWSfx.h
+    TWSfx.cpp
 )
 
 target_include_directories(oshw-qt PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/generic
-    ${SDL_INCLUDE_DIR}
 )
 
 target_link_libraries(oshw-qt PUBLIC
@@ -36,4 +35,5 @@ target_link_libraries(oshw-qt PUBLIC
     Qt::Gui
     Qt::Widgets
     Qt::Xml
+    Qt::Multimedia
 )

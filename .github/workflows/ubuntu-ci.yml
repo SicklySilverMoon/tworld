@@ -2,33 +2,34 @@ name: Ubuntu-CI
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-qt6:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Install QT5 and SDL1
-        run: |
-          sudo apt update
-          sudo apt install qtbase5-dev libsdl1.2-dev
-      - name: Build tworld (SDL)
-        run: |
-          mkdir build-sdl && cd build-sdl
-          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=sdl \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-sdl ..
-          make -j2 && make install
-      - name: Build tworld2 (Qt5)
-        run: |
-          mkdir build-qt5 && cd build-qt5
-          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 ..
-          make -j2 && make install
+      - uses: actions/checkout@v4
       - name: Install QT6
         run: |
-          sudo apt update
-          sudo apt install qt6-base-dev
+          sudo apt-get update
+          sudo apt-get install libglx-dev libgl1-mesa-dev qt6-base-dev qt6-multimedia-dev
+          sudo apt-get -f install
       - name: Build tworld2 (Qt6)
         run: |
           mkdir build-qt6 && cd build-qt6
           cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
             -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
+          make -j2 && make install
+
+  build-sdl1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL1
+        run: |
+          sudo apt-get update
+          sudo apt-get install libsdl1.2-dev
+          sudo apt-get -f install
+      - name: Build tworld (SDL)
+        run: |
+          mkdir build-sdl && cd build-sdl
+          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=sdl \
+            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-sdl ..
           make -j2 && make install

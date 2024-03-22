@@ -21,8 +21,15 @@
 #include <QMainWindow>
 
 #include <QLocale>
+#include <QThread>
+
+#include "TWSfx.h"
 
 class QSortFilterProxyModel;
+class QAudioOutput;
+class QSoundEffect;
+class QAudioSink;
+class QFile;
 
 class TileWorldMainWnd : public QMainWindow, protected Ui::TWMainWnd
 {
@@ -58,7 +65,16 @@ public:
 			InputPromptType eInputType, int (*pfnInputCallback)());
 	int GetSelectedRuleset();
 	void SetSubtitle(const char* szSubtitle);
-	
+
+    void EnableAudio(bool bEnabled);
+    bool LoadSoundEffect(int index, const char* szFilename);
+    void FreeSoundEffect(int index);
+    void SetSoundEffects(unsigned long sfx);
+    void StopSoundEffects();
+    void SetAudioVolume(qreal fVolume);
+    qreal GetAudioVolume() const { return m_volume; };
+    void PauseSoundEffects(bool pause);
+
 	void ReadExtensions(gameseries* pSeries);
 	void Narrate(CCX::Text CCX::Level::*pmTxt, bool bForce = false);
 	
@@ -89,7 +105,8 @@ private:
 	void ReleaseAllKeys();
 	void PulseKey(int nTWKey);
 	int GetTWKeyForAction(QAction* pAction) const;
-	
+    void InitAudioThread(bool status);
+
 	enum HintMode { HINT_EMPTY, HINT_TEXT, HINT_INITSTATE };
 	bool SetHintMode(HintMode newmode);
 
@@ -99,7 +116,11 @@ private:
 	Qt_Surface* m_pSurface;
 	Qt_Surface* m_pInvSurface;
 	TW_Rect m_disploc;
-	
+
+    QThread m_sfxThread;
+    TWSfxManager* m_sfxManager = nullptr;
+    qreal m_volume;
+
 	uint8_t m_nKeyState[TWK_LAST];
 
 	struct MessageData{ QString sMsg; uint32_t nMsgUntil, nMsgBoldUntil; };
@@ -125,6 +146,14 @@ private:
 	CCX::Levelset m_ccxLevelset;
 	
 	QString m_sTextToCopy;
+signals:
+    void enableAudio(bool bEnabled);
+    void loadSoundEffect(int index, QString szFilename);
+    void freeSoundEffect(int index);
+    void setSoundEffects(unsigned long sfx);
+    void stopSoundEffects();
+    void setAudioVolume(qreal fVolume);
+    void pauseSoundEffects(bool paused);
 };
 
 
