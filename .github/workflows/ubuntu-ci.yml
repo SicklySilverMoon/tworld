@@ -2,49 +2,36 @@ name: Ubuntu-CI
 on: [push, pull_request]
 
 jobs:
-  install-sdl2:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: libsdl-org/setup-sdl@main
-        id: sdl
-        with:
-          install-linux-dependencies: true
-          version: 2-latest
-          version-sdl-image: 2-latest
-
   build-qt6:
-    needs:
-      - install-sdl2
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v4
-     - name: Install QT6
-       run: |
-        sudo apt update
-        sudo apt install qt6-base-dev
-     - name: Build tworld2 (Qt6)
-       run: |
-         mkdir build-qt6 && cd build-qt6
-         cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
-         make -j2 && make install
+      - uses: actions/checkout@v4
+      - name: Install QT6
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install cmake libsdl2-dev build-essential libgl1-mesa-dev qt6-base-dev
+      - name: Build tworld2 (Qt6)
+        run: |
+          mkdir build-qt6 && cd build-qt6
+          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
+            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
+          make -j4 && make install
 
   build-qt5:
-    needs:
-      - install-sdl2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install QT5
         run: |
-          sudo apt update
-          sudo apt install qtbase5-dev
+          sudo apt-get -y update
+          sudo apt-get -y install cmake libsdl2-dev qtbase5-dev
       - name: Build tworld2 (Qt5)
         run: |
           mkdir build-qt5 && cd build-qt5
           cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
+            -DCMAKE_PREFIX_PATH=/usr/local/ \
             -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 ..
-          make -j2 && make install
+          make -j4 && make install
 
   build-sdl1:
     runs-on: ubuntu-latest
@@ -52,11 +39,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install SDL1
         run: |
-          sudo apt update
-          sudo apt install libsdl1.2-dev
+          sudo apt-get -y update
+          sudo apt-get -y install libsdl1.2-dev cmake
       - name: Build tworld (SDL)
         run: |
           mkdir build-sdl && cd build-sdl
           cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=sdl \
             -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-sdl ..
-          make -j2 && make install
+          make -j4 && make install
