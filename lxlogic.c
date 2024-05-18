@@ -698,8 +698,12 @@ static int canpushblock(creature *block, int dir, int flags)
     _assert(dir != NIL);
 
     if (!canmakemove(block, dir, flags)) {
-	if (!block->moving && (flags & (CMM_PUSHBLOCKS | CMM_PUSHBLOCKSNOW)))
+	if (!block->moving && (flags & (CMM_PUSHBLOCKS | CMM_PUSHBLOCKSNOW))) {
 	    block->dir = dir;
+	    if (pedanticmode) {
+	        block->tdir = dir;
+	    }
+	}
 	return FALSE;
     }
     if (flags & (CMM_PUSHBLOCKS | CMM_PUSHBLOCKSNOW)) {
@@ -1029,7 +1033,7 @@ static int choosemove(creature *cr)
     } else {
 	if (getforcedmove(cr))
 	    cr->tdir = NIL;
-	else
+	else if (cr->id != Block)
 	    choosecreaturemove(cr);
     }
 
@@ -1930,8 +1934,6 @@ static int advancegame(gamelogic *logic)
     initialhousekeeping();
 
     for (cr = creaturelistend() ; cr >= creaturelist() ; --cr) {
-	setfdir(cr, NIL);
-	cr->tdir = NIL;
 	if (cr != getchip() && cr->hidden)
 	    continue;
 	if (isanimation(cr->id)) {
