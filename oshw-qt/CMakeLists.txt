@@ -1,6 +1,4 @@
-add_library(oshw-qt STATIC ""
-        TWTextCoder.cpp
-        TWTextCoder.h)
+add_library(oshw-qt STATIC "")
 target_sources(oshw-qt PRIVATE
     ../generic/generic.h
     ../generic/_in.cpp
@@ -29,11 +27,11 @@ target_include_directories(oshw-qt PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/generic
-    ${SDL_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIR}
 )
 
 target_link_libraries(oshw-qt PUBLIC
-    ${SDL_LIBRARY}
+    ${SDL2_LIBRARY}
     Qt::Core
     Qt::Gui
     Qt::Widgets

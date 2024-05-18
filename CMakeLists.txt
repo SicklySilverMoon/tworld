@@ -20,12 +20,16 @@ else()
     message(FATAL_ERROR "${OSHW} is not a valid OSHW setting")
 endif()
 
-# We still require SDL even for the Qt build...
-find_package(SDL REQUIRED)
+if(OSHW STREQUAL "sdl")
+    find_package(SDL REQUIRED)
+endif()
+
 if(OSHW STREQUAL "qt")
     set(CMAKE_AUTOUIC TRUE)
     set(CMAKE_AUTOMOC TRUE)
     set(CMAKE_AUTORCC TRUE)
+    # We use SDL2 for the Qt build for audio.
+    find_package(SDL2 REQUIRED)
     find_package(Qt6 COMPONENTS Core Gui Widgets Xml)
     if(NOT Qt6_FOUND)
         find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Xml)
@@ -133,6 +137,10 @@ endif()
 target_link_libraries(${TWORLD_EXE} PRIVATE oshw-${OSHW})
 if(WIN32)
     target_link_libraries(${TWORLD_EXE} PRIVATE $<$<CONFIG:Debug>:-mconsole>)
+endif()
+
+if(OSHW STREQUAL "qt")
+    target_link_libraries(${TWORLD_EXE} PRIVATE SDL2::SDL2)
 endif()
 
 # Generate the current compile time

@@ -7,7 +7,14 @@
 #include	<stdio.h>
 #include	<stdlib.h>
 #include	<string.h>
+
+//TWPLUSPLUS really just means TW2
+#ifdef TWPLUSPLUS
+#include <SDL2/SDL.h>
+#else
 #include	"SDL.h"
+#endif
+
 #include	"sdlsfx.h"
 #include	"../err.h"
 #include	"../settings.h"

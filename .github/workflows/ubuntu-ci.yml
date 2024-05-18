@@ -2,33 +2,61 @@ name: Ubuntu-CI
 on: [push, pull_request]
 
 jobs:
-  build:
+  install-sdl2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Install QT5 and SDL1
+      - uses: libsdl-org/setup-sdl@main
+        id: sdl
+        with:
+          install-linux-dependencies: true
+          version: 2-latest
+          version-sdl-image: 2-latest
+
+  build-qt6:
+    needs:
+      - install-sdl2
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v4
+     - name: Install QT6
+       run: |
+        sudo apt update
+        sudo apt install qt6-base-dev
+     - name: Build tworld2 (Qt6)
+       run: |
+         mkdir build-qt6 && cd build-qt6
+         cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
+           -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
+         make -j2 && make install
+
+  build-qt5:
+    needs:
+      - install-sdl2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install QT5
         run: |
           sudo apt update
-          sudo apt install qtbase5-dev libsdl1.2-dev
-      - name: Build tworld (SDL)
-        run: |
-          mkdir build-sdl && cd build-sdl
-          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=sdl \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-sdl ..
-          make -j2 && make install
+          sudo apt install qtbase5-dev
       - name: Build tworld2 (Qt5)
         run: |
           mkdir build-qt5 && cd build-qt5
           cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
             -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt5 ..
           make -j2 && make install
-      - name: Install QT6
+
+  build-sdl1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL1
         run: |
           sudo apt update
-          sudo apt install qt6-base-dev
-      - name: Build tworld2 (Qt6)
+          sudo apt install libsdl1.2-dev
+      - name: Build tworld (SDL)
         run: |
-          mkdir build-qt6 && cd build-qt6
-          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=qt \
-            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-qt6 ..
+          mkdir build-sdl && cd build-sdl
+          cmake -DCMAKE_BUILD_TYPE=Debug -DOSHW=sdl \
+            -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/dist-sdl ..
           make -j2 && make install
