@@ -525,7 +525,12 @@ void TileWorldMainWnd::OnPlayback()
  */
 int setkeyboardrepeat(int enable)
 {
-	return g_pMainWnd->SetKeyboardRepeat(enable);
+	if (g_pMainWnd) {
+		return g_pMainWnd->SetKeyboardRepeat(enable);
+	}
+	else {
+		return true;
+	}
 }
 
 bool TileWorldMainWnd::SetKeyboardRepeat(bool bEnable)
