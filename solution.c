@@ -612,11 +612,10 @@ int readsolutions(gameseries *series)
 	    break;
 	if (gametmp.sgflags & SGF_SETNAME) {
 	    if (strcmp(gametmp.name, series->name)) {
-		errmsg(series->name, "ignoring solution file %s as it was"
-				     " recorded for a different level set: %s",
-		       series->savefile.name, gametmp.name);
+		warn("%s: solution file %s was recorded for a different level"
+		    " set (%s); continuing anyway, but disabling saving",
+		    series->name, series->savefile.name, gametmp.name);
 		series->gsflags |= GSF_NOSAVING;
-		return FALSE;
 	    }
 	    continue;
 	}
