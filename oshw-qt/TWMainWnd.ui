@@ -2356,120 +2356,60 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>&amp;Start</string>
    </property>
-   <property name="shortcut">
-    <string>Space</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="action_Pause">
    <property name="text">
     <string>Pa&amp;use</string>
-   </property>
-   <property name="shortcut">
-    <string>Backspace</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_Restart">
    <property name="text">
     <string>&amp;Restart</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="action_Next">
    <property name="text">
     <string>&amp;Next</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_Previous">
    <property name="text">
     <string>&amp;Previous</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="action_GoTo">
    <property name="text">
     <string>Enter Pass&amp;word...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+G</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_Playback">
    <property name="text">
     <string>&amp;Playback</string>
    </property>
-   <property name="shortcut">
-    <string>Tab</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="action_Verify">
    <property name="text">
     <string>&amp;Verify</string>
-   </property>
-   <property name="shortcut">
-    <string>Shift+Tab</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_Replace">
    <property name="text">
     <string>&amp;Replace</string>
    </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="action_Delete">
    <property name="text">
     <string>&amp;Delete</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_Prologue">
    <property name="text">
     <string>&amp;View Prologue...</string>
    </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
-   </property>
   </action>
   <action name="action_Epilogue">
    <property name="text">
     <string>View &amp;Epilogue...</string>
-   </property>
-   <property name="shortcutContext">
-    <enum>Qt::WidgetShortcut</enum>
    </property>
   </action>
   <action name="action_displayCCX">
