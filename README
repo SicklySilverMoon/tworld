@@ -213,7 +213,7 @@ This latest version - Tile World 2 - is being maintained at:
 
   License
 
-Tile World is copyright (C) 2001-2015 by Brian Raiter, Madhav
+Tile World is copyright (C) 2001-2024 by Brian Raiter, Madhav
 Shanbhag, and Eric Schmidt.  This program is free software; you can
 redistribute it and/or modify it under the terms of the GNU General
 Public License as published by the Free Software Foundation; either
@@ -240,6 +240,8 @@ Tile World 2 - which simply improves upon the user interface of the original
 Tile World program - was developed by Madhav Shanbhag.
 
 Version 2.1 was produced by Eric Schmidt.
+
+Version 2.3 was produced by Michael Hansen (Zrax), A Sickly Silver Moon, TheGLander, and Eevee
 
 The sound effects included in this distribution were created by Brian
 Raiter, with assistance from SoX. Brian Raiter has explictly placed these
