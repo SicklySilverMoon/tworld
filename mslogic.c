@@ -15,7 +15,7 @@
 #ifdef NDEBUG
 #define	_assert(test)	((void)0)
 #else
-#define _assert(test) ((test) || (die("internal error: failed sanity check (%s)\nPlease report this error to https://forum.bitbusters.club/", #test), 0))
+#define _assert(test) ((test) || (die("internal error: failed sanity check (%s)\nPlease report this error to https://github.com/SicklySilverMoon/tworld/issues", #test), 0))
 #endif
 
 /* A list of ways for Chip to lose.
