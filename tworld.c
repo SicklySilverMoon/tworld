@@ -1855,9 +1855,9 @@ static void initdirs(char const *series, char const *seriesdat,
 #ifdef SAVEDIR
 	save = SAVEDIR;
 #else
-//	if ((dir = getenv("HOME")) && *dir && strlen(dir) < maxpath - 8)
-//	    combinepath(savedir, dir, ".tworld");
-//	else
+	if ((dir = getenv("HOME")) && *dir && strlen(dir) < maxpath - 8)
+	    combinepath(savedir, dir, ".tworld");
+	else
 	    combinepath(savedir, root, "save");
 
 #endif

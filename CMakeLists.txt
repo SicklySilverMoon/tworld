@@ -73,6 +73,8 @@ else()
 
     if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_definitions(-DROOTDIR="${SHARE_DIR}")
+    else()
+        add_definitions(-DSAVEDIR="./save")
     endif()
 
     install(FILES ${TW_SETS} DESTINATION "${SHARE_DIR}/sets")
