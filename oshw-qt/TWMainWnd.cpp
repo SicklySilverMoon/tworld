@@ -790,8 +790,13 @@ bool TileWorldMainWnd::DisplayGame(const gamestate* pState, int nTimeLeft, int n
 		else
 			sFormat = QStringLiteral("---");
 
-		if ((bTimedLevel || bForceShowTimer) && nBestTime != TIME_NIL)
-			sFormat += QStringLiteral(" (%1)").arg(nTimeLeft-nBestTime);
+		if ((bTimedLevel || bForceShowTimer) && nBestTime != TIME_NIL) {
+            int value = nTimeLeft-nBestTime;
+            if (value >= 0)
+                sFormat += QStringLiteral(" (+%1)").arg(value);
+            else
+                sFormat += QStringLiteral(" (%1)").arg(value);
+        }
 		m_pPrgTime->setFormat(sFormat);
 	}
 
