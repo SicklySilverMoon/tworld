@@ -1,3 +1,4 @@
-file=CCLP4.dat
+file=CHIPS.dat
 lastlevel=144
 ruleset=lynx
+fixlynx=y
