@@ -1,3 +1,14 @@
+2024 Aug 25: version 2.3.0 (by Michael Hansen (Zrax), ChosenID, David Stolp (pieguy),
+A Sickly Silver Moon, G lander, and Eevee)
+* Tile World is now built with Qt5 or 6 instead of 4, and with SDL2 instead of 1.
+* Level author info is additionally read from DAT field 9, if available.
+* On macOS, the main window now regains focus after closing dialogs.
+* Repository now contains CCLPs 1 through 5 with documentation.
+* Pedantic Lynx emulates Block Kicking.
+* Batch verify no longer segfaults, and allows verifying solutions for
+different sets.
+* MS logic now emulates many previously MS-only glitches.
+
 2017 Jul 12: version 2.2.0 (by Eric Schmidt)
 * Display levelsets and ruleset toggle instead of .dac files;
   automatically generate "missing" .dac files.
