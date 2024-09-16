@@ -362,8 +362,7 @@ int readseriesfile(gameseries *series)
     }
 
     if (!series->mapfile.fp) {
-	if (!openfileindir(&series->mapfile, seriesdir,
-			   series->mapfilename, "rb", "unknown error"))
+	if (!fileopen(&series->mapfile, series->mapfilename, "rb", "unknown error"))
 	    return FALSE;
 	if (!readseriesheader(series))
 	    return FALSE;
@@ -513,7 +512,7 @@ static char *readconfigfile(fileinfo *file, gameseries *series)
  * list stored under the second argument. This function is used as a
  * findfiles() callback.
  */
-static int getseriesfile(char const *filename, void *data)
+static int getseriesfile(char const *ogfilename, void *data)
 {
     fileinfo		file;
     seriesdata	       *sdata = (seriesdata*)data;
@@ -521,6 +520,7 @@ static int getseriesfile(char const *filename, void *data)
     unsigned long	magic;
     char	       *datfilename;
     int			config, f;
+		char         *filename = ogfilename + strlen(sdata->curdir) + 1;
 
     clearfileinfo(&file);
     if (!openfileindir(&file, sdata->curdir, filename, "rb", "unknown error"))
@@ -604,13 +604,15 @@ static int getseriesfile(char const *filename, void *data)
 /* Determine whether the file is a map file. If so, add it to the list of
  * available map files. This function is used as a findfiles() callback.
  */
-static int getmapfile(char const *filename, void *data)
+static int getmapfile(char const *ogfilename, void *data)
 {
     fileinfo		file;
     seriesdata	       *sdata = (seriesdata*)data;
     gameseries	        s;
     unsigned long	magic;
     int			f;
+
+		char        *filename = ogfilename + strlen(sdata->curdir) + 1;
 
     clearfileinfo(&file);
     if (!openfileindir(&file, sdata->curdir, filename, "rb", "unknown error"))
@@ -727,7 +729,7 @@ static gameseries* createnewseries
     int ok = createnewdacfile(newdacname, datfile, ruleset);
     if (!ok) {
 	errmsg(newdacname, "Attempt to create %s ruleset .dac for %s failed",
-	   ruleset == Ruleset_MS ? "MS" : "Lynx", datfile->filename);
+	  ruleset == Ruleset_MS ? "MS" : "Lynx", datfile->filename);
     }
     if (errno == EEXIST) return NULL;
 
