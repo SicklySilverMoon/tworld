@@ -112,6 +112,11 @@ int fileopen(fileinfo *file, char const *name, char const *mode,
     file->fp = FOPEN(name, mode);
     if (file->fp)
 	return TRUE;
+    if (file->alloc) {
+	free(file->name);
+	file->name = NULL;
+	file->alloc = FALSE;
+    }
     return fileerr(file, msg);
 }
 
