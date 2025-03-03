@@ -2,13 +2,14 @@ Chip's Challenge, Level Pack 2
 
 This package includes the following files:
 
-1) CCLP2.dat - the level set
-2) CCLP2.html - the credits page
-3) C.gif - supplements credits page
-4) L.gif - "
-5) P.gif - "
-6) 2.gif - "
-7) disclaimer.txt - this file
+1) CCLP2.dat - the original level set (MS ruleset only)
+2) CCLXP2 folder - a Lynx ruleset version of the level set
+3) CCLP2.html - the credits page
+4) C.gif - supplements credits page
+5) L.gif - "
+6) P.gif - "
+7) 2.gif - "
+8) disclaimer.txt - this file
 
 This package may be distributed freely, as long as
 all of these files are left intact.
@@ -17,16 +18,21 @@ For further developments regarding Chip's Challenge,
 including instructions for playing these levels,
 please visit one of these sites:
 
-<http://groups.yahoo.com/group/chips_challenge>
+<https://bitbusters.club/>
+<https://forum.bitbusters.club/>
 
-<news://news.annexcafe.com/chips.challenge>
+Information about the CCLXP2 Lynx version:
+https://forum.bitbusters.club/thread-647.html
 
 History:
 09 Feb 2002 - Original release of CCLP2.
 09 Jul 2003 - Levels #29 and #76 renamed, to avoid conflict with CC1.
 09 Jul 2003 - Level #149 altered, to avoid unintentional solution.
 10 Jul 2003 - Correction made to disclaimer.txt
+18 Feb 2024 - Updated CCLP2.dat to include level author information
+	      Added CCLXP2 to the distributed files
+              Updated links in this document
 
 Chip's Challenge is a registered trademark of Bridgestone Multimedia. 
 
-These files were updated 10 Jul 2003. 
+These files were updated 18 Feb 2024. 
