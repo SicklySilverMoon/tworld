@@ -40,7 +40,7 @@ Build Tile World as a usual CMake program using the following commands:
 ```sh
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=Relase ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 cmake --build .
 ```
 
