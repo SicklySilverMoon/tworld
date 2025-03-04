@@ -570,7 +570,7 @@ static int opensolutionfile(fileinfo *file, char const *datname, int writable)
     if (writable) {
 	if (!savedirchecked && savedir && *savedir && !haspathname(filename)) {
 	    savedirchecked = TRUE;
-	    if (!finddir(savedir)) {
+	    if (!finddir(savedir, TRUE)) {
 		*savedir = '\0';
 		fileerr(file, "can't access directory");
 	    }

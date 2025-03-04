@@ -108,9 +108,21 @@ extern int combinepath(char *dest, char const *dir, char const *path);
  */
 extern char *getpathforfileindir(char const *dir, char const *filename);
 
-/* Verify that the given directory exists, or create it if it doesn't.
+/* Verify that the given directory exists, or create it if it doesn't
+ * and create is set to TRUE.
  */
-extern int finddir(char const *dir);
+extern int finddir(char const *dir, int create);
+
+/* Obtain save/settings directory paths and place in savedir,
+ * settingsdir. root is the root directory of Tile World, and
+ * savedir/settingsdir must be buffers of size getpathbufferlen().
+ * The old save directory path is used if a directory exists at
+ * that location. Otherwise the function looks for system-specific
+ * paths. If system-specific paths cannot be found, root/save is
+ * used, if it fits in the buffers. If this fails, FALSE is
+ * returned.
+ */
+extern int get_userdirs(char const *root, char *savedir, char *settingsdir);
 
 /* Open a file, using dir as the directory if filename is not already
  * a complete pathname. FALSE is returned if the directory could not

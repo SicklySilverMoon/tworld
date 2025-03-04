@@ -15,7 +15,7 @@
 #include <sstream>
 #include <utility>
 
-extern char *savedir;
+char *settingsdir = NULL;
 
 using std::free;
 using std::getline;
@@ -36,7 +36,7 @@ char const * sfname = "settings";
 
 void loadsettings()
 {
-    char *fname = getpathforfileindir(savedir, sfname);
+    char *fname = getpathforfileindir(settingsdir, sfname);
     ifstream in(fname);
     free(fname);
 
@@ -49,7 +49,7 @@ void loadsettings()
     {
         size_t pos(line.find('='));
         if (pos != string::npos)
-	    newsettings.insert({line.substr(0, pos), line.substr(pos+1)});
+            newsettings.insert({line.substr(0, pos), line.substr(pos+1)});
     }
 
     if (!in.eof())
@@ -60,7 +60,11 @@ void loadsettings()
 
 void savesettings()
 {
-    char *fname = getpathforfileindir(savedir, sfname);
+    if (!finddir(settingsdir, TRUE)) {
+        warn("could not access settings directory");
+        return;
+    }
+    char *fname = getpathforfileindir(settingsdir, sfname);
     ofstream out(fname);
     free(fname);
 

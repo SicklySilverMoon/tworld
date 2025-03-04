@@ -11,6 +11,8 @@
 extern "C" {
 #endif
 
+extern char *settingsdir;
+
 void loadsettings(void);
 
 void savesettings(void);
