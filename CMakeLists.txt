@@ -146,7 +146,7 @@ if(OSHW STREQUAL "qt")
 endif()
 
 # Generate the current compile time
-if(WIN32)
+if(CMAKE_HOST_WIN32)
     # TODO: It would be nice to use the format below on Win32 as well...
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/comptime.bat"
          "echo #define COMPILE_TIME \"%DATE% %TIME%\" > comptime.h")
