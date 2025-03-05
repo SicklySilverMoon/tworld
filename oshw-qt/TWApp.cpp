@@ -171,6 +171,7 @@ int main(int argc, char *argv[])
 	TileWorldApp app(argc, argv);
 	QApplication::setStyle(QStringLiteral("fusion"));	// Other styles may mess up colors
 	QApplication::setWindowIcon(QIcon(QStringLiteral(":/tworld2.ico")));
+	QApplication::setDesktopFileName("club.bitbusters.tw2.TileWorld");
 
 	return app.RunTWorld();
 }

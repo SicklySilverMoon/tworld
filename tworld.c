@@ -298,6 +298,7 @@ static void printdirectories(void)
     printf("Level sets read from:            %s\n", seriesdir);
     printf("Configured data files read from: %s\n", seriesdatdir);
     printf("Solution files saved in:         %s\n", savedir);
+    printf("Settings saved in:               %s\n", settingsdir);
 }
 
 /*
@@ -1815,6 +1816,14 @@ static void initdirs(char const *series, char const *seriesdat,
 	else
 	    warn("Value of environment variable TWORLDSAVEDIR is too long");
     }
+#ifdef SAVEDIR
+    if (!save) {
+	if (strlen(SAVEDIR) < maxpath)
+	    save = SAVEDIR;
+	else
+	    warn("Value of compile-time macro SAVEDIR is too long");
+    }
+#endif
 
     if (!res || !series || !seriesdat) {
 	if ((dir = getenv("TWORLDDIR")) && *dir) {
@@ -1824,10 +1833,12 @@ static void initdirs(char const *series, char const *seriesdat,
 		warn("Value of environment variable TWORLDDIR is too long");
 	}
 	if (!root) {
-#ifdef ROOTDIR
-	    root = ROOTDIR;
-#else
 	    root = ".";
+#ifdef ROOTDIR
+	    if (strlen(ROOTDIR) < maxpath - 8)
+		root = ROOTDIR;
+	    else
+		warn("Value of compile-time macro ROOTDIR is too long");
 #endif
 	}
     }
@@ -1851,18 +1862,12 @@ static void initdirs(char const *series, char const *seriesdat,
 	combinepath(seriesdatdir, root, "data");
 
     savedir = getpathbuffer();
+    settingsdir = getpathbuffer();
     if (!save) {
-#ifdef SAVEDIR
-	save = SAVEDIR;
-#else
-	if ((dir = getenv("HOME")) && *dir && strlen(dir) < maxpath - 8)
-	    combinepath(savedir, dir, ".tworld");
-	else
-	    combinepath(savedir, root, "save");
-
-#endif
+	get_userdirs(root, savedir, settingsdir);
     } else {
 	strcpy(savedir, save);
+	strcpy(settingsdir, save);
     }
 }
 
@@ -2009,6 +2014,7 @@ static void shutdownsystem(void)
     free(seriesdir);
     free(seriesdatdir);
     free(savedir);
+    free(settingsdir);
 }
 
 /* Determine what to play. A list of available series is drawn up; if

@@ -1,1 +1,4 @@
+#include <winuser.h>
+
 SDL_app ICON tworld2.ico
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "tworld2.manifest"

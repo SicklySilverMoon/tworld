@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Tile World
+Comment=An open-source reimplementation of the game "Chip's Challenge"
+Icon=club.bitbusters.tw2.TileWorld
+Exec=tworld2
+Categories=Game;LogicGame;

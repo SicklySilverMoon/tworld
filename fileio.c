@@ -17,12 +17,12 @@
 
 /* Determine the proper directory delimiter and mkdir() arguments.
  */
-#ifdef WIN32
+#ifdef _WIN32
 #define	DIRSEP_CHAR	'\\'
 #define	createdir(name)	(mkdir(name) == 0)
 #else
 #define	DIRSEP_CHAR	'/'
-#define	createdir(name)	(mkdir(name, 0755) == 0)
+#define	createdir(name)	(mkdir(name, 0700) == 0)
 #endif
 
 /* Determine a compile-time number to use as the maximum length of a
@@ -43,6 +43,13 @@
 #      endif
 #    endif
 #  endif
+#endif
+
+#ifdef _WIN32
+#include <shlobj.h>
+#elif defined(__APPLE__) && defined(__MACH__)
+#include <glob.h>
+#include <sysdir.h>
 #endif
 
 /* The function used to display error messages relating to file I/O.
@@ -112,6 +119,11 @@ int fileopen(fileinfo *file, char const *name, char const *mode,
     file->fp = FOPEN(name, mode);
     if (file->fp)
 	return TRUE;
+    if (file->alloc) {
+	free(file->name);
+	file->name = NULL;
+	file->alloc = FALSE;
+    }
     return fileerr(file, msg);
 }
 
@@ -407,13 +419,98 @@ int combinepath(char *dest, char const *dir, char const *path)
     return TRUE;
 }
 
-/* Create the directory dir if it doesn't already exist.
+/* Verify that the given directory exists, or create it if it doesn't
+ * and create is set to TRUE.
  */
-int finddir(char const *dir)
+int finddir(char const *dir, int create)
 {
     struct stat	st;
 
-    return stat(dir, &st) ? createdir(dir) : S_ISDIR(st.st_mode);
+    return stat(dir, &st) ? (create && createdir(dir))
+			: S_ISDIR(st.st_mode);
+}
+
+/* Obtain save/settings directory paths and place in savedir,
+ * settingsdir. root is the root directory of Tile World, and
+ * savedir/settingsdir must be buffers of size getpathbufferlen().
+ * The old save directory path is used if a directory exists at
+ * that location. Otherwise the function looks for system-specific
+ * paths. If system-specific paths cannot be found, root/save is
+ * used, if it fits in the buffers. If this fails, FALSE is
+ * returned.
+ */
+int get_userdirs(char const *root, char *savedir, char *settingsdir) {
+    int founddir = FALSE;
+    char *home;
+
+    // Use old path if it still exists
+    if ((home = getenv("HOME")) && *home)
+        founddir = combinepath(savedir, home, ".tworld") && finddir(savedir, FALSE);
+    else
+        founddir = combinepath(savedir, root, "save") && finddir(savedir, FALSE);
+
+    if (founddir) {
+	strcpy(settingsdir, savedir);
+	return TRUE;
+    }
+
+#ifdef _WIN32
+    // Use Saved Games folder on Windows
+    wchar_t *savedgamesdir;
+    char path[PATH_MAX];
+    if (SHGetKnownFolderPath(&FOLDERID_SavedGames, KF_FLAG_CREATE, NULL, &savedgamesdir) == S_OK) {
+	// Convert from UTF-16 to UTF-8
+	if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, savedgamesdir, -1, path, sizeof(path), NULL, NULL)) {
+	    founddir = combinepath(savedir, path, "Tile World");
+	    if (founddir)
+		strcpy(settingsdir, savedir);
+	}
+	CoTaskMemFree(savedgamesdir);
+    }
+#elif defined(__APPLE__) && defined(__MACH__)
+    // Use Application Support directory on macOS
+    char path[PATH_MAX];
+    sysdir_search_path_enumeration_state state = sysdir_start_search_path_enumeration(SYSDIR_DIRECTORY_APPLICATION_SUPPORT, SYSDIR_DOMAIN_MASK_USER);
+    if (sysdir_get_next_search_path_enumeration(state, path)) {
+	// Typically path will start with a tilde which must be expanded
+	glob_t pglob;
+	if (!glob(path, GLOB_TILDE, NULL, &pglob)) {
+	    founddir = combinepath(savedir, pglob.gl_pathv[0], "Tile World");
+	    if (founddir)
+		strcpy(settingsdir, savedir);
+	}
+	globfree(&pglob);
+    }
+#elif defined(__unix__)
+    // On all other *nix systems, follow XDG base directory spec
+    char tmp[PATH_MAX + 1];
+    char *xdg_data = getenv("XDG_DATA_HOME");
+    char *xdg_config = getenv("XDG_CONFIG_HOME");
+    if (xdg_data && xdg_data[0] == DIRSEP_CHAR)
+	founddir = combinepath(tmp, xdg_data, "tworld");
+    else if (home && *home)
+	founddir = combinepath(tmp, home, ".local/share/tworld");
+    if (!founddir)
+	    goto done;
+    if (xdg_config && xdg_config[0] == DIRSEP_CHAR)
+	founddir = combinepath(settingsdir, xdg_config, "tworld");
+    else if (home && *home)
+	founddir = combinepath(settingsdir, home, ".config/tworld");
+    else
+	founddir = FALSE;
+    if (founddir)
+	strcpy(savedir, tmp);
+#endif
+
+done:
+    if (!founddir) {
+	// Fallback path
+	if (combinepath(savedir, root, "save")) {
+	    strcpy(settingsdir, savedir);
+	    founddir = TRUE;
+	}
+    }
+    return founddir;
 }
 
 /* Return the pathname for a directory and/or filename, using the
