@@ -5,6 +5,7 @@
 
 cmake_minimum_required(VERSION 3.20)
 project(tworld)
+include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -67,12 +68,12 @@ if(WIN32)
     install(FILES ${TW_DOCS} DESTINATION "${CMAKE_INSTALL_PREFIX}/docs")
     install(DIRECTORY ${TW_CCLP_DOCS} DESTINATION "${CMAKE_INSTALL_PREFIX}/docs")
 else()
-    set(SHARE_DIR "${CMAKE_INSTALL_PREFIX}/share/tworld" CACHE STRING
+    set(SHARE_DIR "${CMAKE_INSTALL_DATADIR}/tworld" CACHE STRING
         "Directory for shared files")
     add_definitions(-Dstricmp=strcasecmp)
 
     if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-        add_definitions(-DROOTDIR="${SHARE_DIR}")
+        add_definitions(-DROOTDIR="${CMAKE_INSTALL_FULL_DATADIR}/tworld")
     else()
         add_definitions(-DSAVEDIR="./save")
     endif()
@@ -80,8 +81,8 @@ else()
     install(FILES ${TW_SETS} DESTINATION "${SHARE_DIR}/sets")
     install(FILES ${TW_DATA} DESTINATION "${SHARE_DIR}/data")
     install(FILES ${TW_RES}  DESTINATION "${SHARE_DIR}/res")
-    install(FILES ${TW_MAN6} DESTINATION "${CMAKE_INSTALL_PREFIX}/man/man6")
-    install(DIRECTORY ${TW_CCLP_DOCS} DESTINATION "${SHARE_DIR}/docs")
+    install(FILES ${TW_MAN6} DESTINATION "${CMAKE_INSTALL_MANDIR}/man6")
+    install(DIRECTORY ${TW_CCLP_DOCS} DESTINATION "${CMAKE_INSTALL_DOCDIR}")
 endif()
 
 add_subdirectory(oshw-${OSHW})
@@ -172,7 +173,9 @@ if(WIN32 OR APPLE)
             BUNDLE DESTINATION .
     )
 else()
-    install(TARGETS ${TWORLD_EXE} RUNTIME DESTINATION bin)
+    install(TARGETS ${TWORLD_EXE} RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    install(FILES club.bitbusters.tw2.TileWorld.desktop DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
+    install(FILES club.bitbusters.tw2.TileWorld.png DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps")
 endif()
 
 add_executable(mklynxcc EXCLUDE_FROM_ALL mklynxcc.c)
