@@ -1,4 +1,4 @@
-2025 Jul 09: version 2.3.1 (by A Sickly Silver Moon, David Stolp, and ChosenID)
+2025 Jul 09: version 2.3.1 (by A Sickly Silver Moon, G lander, David Stolp, and ChosenID)
 * Made input handling more lax by default, with a command line arg (-c) to make it better for boosting.
 
 2024 Aug 25: version 2.3.0 (by Michael Hansen (Zrax), ChosenID, David Stolp (pieguy),

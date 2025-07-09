@@ -34,7 +34,7 @@ extern void setgameplaymode(int mode);
 /* Initialize the current state to the starting position of the
  * given level.
  */
-extern int initgamestate(gamesetup *game, int ruleset);
+extern int initgamestate(gamesetup* game, int ruleset);
 
 /* Set up the current state to play from its prerecorded solution.
  * FALSE is returned if no solution is available for playback.
@@ -42,13 +42,14 @@ extern int initgamestate(gamesetup *game, int ruleset);
 extern int prepareplayback(void);
 
 extern int setstepping(int stepping, int display);
+
 extern int changestepping(int delta, int display);
 
 extern void advanceinitrandomff(int display);
 
 /* Get a string representing the stepping and (in Lynx mode) initial random
  * force floor direction. */
-extern char const *getinitstatestring(void);
+extern char const* getinitstatestring(void);
 
 /* Return the amount of time passed in the current game, in seconds.
  */
@@ -86,7 +87,7 @@ extern void setenddisplay(void);
 
 /* Return TRUE if a solution exists for the given level.
  */
-extern int hassolution(gamesetup const *game);
+extern int hassolution(gamesetup const* game);
 
 /* Replace the user's solution with the just-executed solution if it
  * beats the existing solution for shortest time. FALSE is returned if
