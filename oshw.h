@@ -13,6 +13,8 @@
 struct gamestate;
 struct gameseries;
 
+extern int casualinputs; //Linked to the defined version in tworld.c
+
 #ifdef __cplusplus
 	#define OSHW_EXTERN extern "C"
 #else

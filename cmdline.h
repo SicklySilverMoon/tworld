@@ -41,13 +41,13 @@
  * creatures to be found on the cmdline.
  */
 enum {
-    OPT_OPTION,		/* a legal option */
-    OPT_NONOPTION,	/* a plain, non-option argument */
-    OPT_BADOPTION,	/* an unrecognized option */
-    OPT_NOVALUE,	/* a legal option without a value */
-    OPT_LONG,		/* a GNU-style --long-option */
-    OPT_DASH,		/* a bare "-" */
-    OPT_END		/* end of the cmdline */
+    OPT_OPTION, /* a legal option */
+    OPT_NONOPTION, /* a plain, non-option argument */
+    OPT_BADOPTION, /* an unrecognized option */
+    OPT_NOVALUE, /* a legal option without a value */
+    OPT_LONG, /* a GNU-style --long-option */
+    OPT_DASH, /* a bare "-" */
+    OPT_END /* end of the cmdline */
 };
 
 /* The cmdline info structure. The first three fields are supplied by
@@ -56,15 +56,15 @@ enum {
  * internally by readoption().
  */
 typedef struct cmdlineinfo {
-    char const *options;	/* the list of valid options */
-    int		argc;		/* cmdline's argc */
-    char      **argv;		/* cmdline's argv */
-    int		opt;		/* the current option (character value) */
-    int		type;		/* type of current option (see below) */
-    char       *val;		/* value accompanying the option */
-    int		index;		/* index of the next argument */
-    char       *argptr;		/* ptr to the next option/argument */
-    int		stop;		/* flag indicating no further options */
+    char const* options; /* the list of valid options */
+    int argc; /* cmdline's argc */
+    char** argv; /* cmdline's argv */
+    int opt; /* the current option (character value) */
+    int type; /* type of current option (see below) */
+    char* val; /* value accompanying the option */
+    int index; /* index of the next argument */
+    char* argptr; /* ptr to the next option/argument */
+    int stop; /* flag indicating no further options */
 } cmdlineinfo;
 
 /* initoptions() initializes the cmdline parsing. opt is an empty
@@ -73,8 +73,7 @@ typedef struct cmdlineinfo {
  * and argv give the cmdline to parse. Note that argv[0] is NOT
  * automatically skipped; the caller should use argc - 1 and argv + 1.
  */
-extern void initoptions(cmdlineinfo *opt,
-			int argc, char **argv, char const* list);
+extern void initoptions(cmdlineinfo* opt, int argc, char** argv, char const* list);
 
 /* readoption() locates and identifies the next option on the cmdline.
  * Returns the character of the option found, which is also stored in
@@ -88,13 +87,13 @@ extern void initoptions(cmdlineinfo *opt,
  * return value of EOF indicates that the entire cmdline has been
  * parsed.
  */
-extern int readoption(cmdlineinfo *opt);
+extern int readoption(cmdlineinfo* opt);
 
 /* skipoption() causes the current cmdline argument to be skipped over
  * on the next call to readoption(). This is useful for situations
  * when an option has multiple values (i.e., a value with spaces). The
  * return value is 0, or EOF if the end of the cmdline is reached.
  */
-extern int skipoption(cmdlineinfo *opt);
+extern int skipoption(cmdlineinfo* opt);
 
 #endif

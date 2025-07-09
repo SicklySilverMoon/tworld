@@ -333,6 +333,7 @@ int doturn(int cmd)
 		return -1;
 	}
     }
+	printf("%d\n", state.currentinput);
 
     n = (*logic->advancegame)(logic);
 
