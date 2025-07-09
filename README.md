@@ -97,7 +97,7 @@ The Tile World 2 homepage is at https://tw2.bitbusters.club.
 
 ## License
 
-Tile World is copyright (C) 2001-2024 by Brian Raiter, Madhav Shanbhag, and Eric
+Tile World is copyright (C) 2001-2025 by Brian Raiter, Madhav Shanbhag, and Eric
 Schmidt. This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
 Software Foundation; either version 2 of the License, or (at your option) any

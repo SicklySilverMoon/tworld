@@ -52,7 +52,7 @@ tablespec const* yowzitch = &yowzitch_table;
  */
 static char const* vourzhon_items[] = {
     "1+*", "1-Tile World: version " VERSION,
-    "1+", "1-Copyright (c) 2001-2024 by Brian Raiter, Madhav Shanbhag, "
+    "1+", "1-Copyright (c) 2001-2025 by Brian Raiter, Madhav Shanbhag, "
     "Eric Schmidt, Michael Hansen, ChosenID, David Stolp, "
     "A Sickly Silver Moon, G lander, and Eevee",
     "1+", "1-compiled " COMPILE_TIME,
