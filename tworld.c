@@ -1435,6 +1435,7 @@ static int verifyplayback(gamespec* gs) {
             case CmdQuit: exit(0);
         }
     }
+    printf("\n");
     gs->playmode = Play_None;
     quitgamestate();
     setdisplaymsg(NULL, 0, 0);

@@ -347,6 +347,29 @@ int expandsolution(solutioninfo *solution, gamesetup const *game)
 	    break;
 	}
     }
+	char moves[] = {
+		[NORTH] = 'N',
+		[WEST] = 'W',
+		[SOUTH] = 'S',
+		[EAST] = 'E',
+    		[NORTH | WEST] = 'Q',
+    		[SOUTH | WEST] = 'Z',
+    		[NORTH | EAST] = 'R',
+    		[SOUTH | EAST] = 'V',
+        };
+	// printf("%d: ", game->besttime);
+	printf("%d: ", game->number);
+	size_t time = 0;
+        for (size_t i = 0; i < solution->moves.count; ++i) {
+	    action *move = solution->moves.list + i;
+            while (time < move->when) {
+    	     	printf("-");
+    	     	time++;
+    	    }
+    	    putc(moves[move->dir], stdout);time++;
+        }
+	putc('\n', stdout);
+
     return TRUE;
 
   truncated:

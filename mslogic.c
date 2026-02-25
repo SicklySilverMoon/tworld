@@ -2401,6 +2401,8 @@ static int advancegame(gamelogic* logic) {
     done:
     finalhousekeeping();
     preparedisplay();
+
+    printf("(%d, %d), ", chippos() % 32, chippos() / 32);
     return r;
 }
 
