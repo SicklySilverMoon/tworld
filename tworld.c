@@ -1888,6 +1888,7 @@ static void initdirs(char const* series, char const* seriesdat,
     if (!save) {
 #ifdef SAVEDIR
         save = SAVEDIR;
+        strcpy(savedir, save);
 #else
 	if ((dir = getenv("HOME")) && *dir && strlen(dir) < maxpath - 8)
 	    combinepath(savedir, dir, ".tworld");
