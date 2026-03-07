@@ -756,19 +756,17 @@ typedef	struct solutiondata {
 } solutiondata;
 
 /* If the given file starts with the prefix stored in the solutiondata
- * structure, then add it to the pool of filenames, prefixed with
- * "1-". This function is a callback for findfiles().
+ * structure, then add it to the pool of filenames.
+ * This function is a callback for findfiles().
  */
 static int getsolutionfile(char const *filename, void *data)
 {
     solutiondata       *sdata = data;
     int			n;
 
-    if (!memcmp(filename, sdata->prefix, sdata->prefixlen)) {
+    if (!memcmp(skippathname(filename), sdata->prefix, sdata->prefixlen)) {
 	n = strlen(filename) + 1;
-	x_alloc(sdata->pool, sdata->allocated + n + 2);
-	sdata->pool[sdata->allocated++] = '1';
-	sdata->pool[sdata->allocated++] = '-';
+	x_alloc(sdata->pool, sdata->allocated + n);
 	memcpy(sdata->pool + sdata->allocated, filename, n);
 	sdata->allocated += n;
 	++sdata->count;
@@ -821,11 +819,16 @@ int createsolutionfilelist(gameseries const *series, int morethanone,
     table->items[0] = "2-Select a solution file";
     offset = 0;
     for (i = 0 ; i < s.count ; ++i) {
-	n = strlen(s.pool + offset) + 1;
-	filelist[i] = s.pool + offset + 2;
+	char *tname = s.pool + offset + strlen(savedir) + 1;
+	char *displayedname = malloc(strlen(tname) + 4);
+	displayedname[0] = '1';
+	displayedname[1] = '-';
+	displayedname[2] = 0;
+	strcat(displayedname, tname);
 	table->items[2 * i + 1] = "1+\267";
-	table->items[2 * i + 2] = s.pool + offset;
-	offset += n;
+	table->items[2 * i + 2] = displayedname;
+	filelist[i] = tname;
+	offset += strlen(s.pool + offset) + 1;
     }
 
     *pfilelist = filelist;
