@@ -2402,7 +2402,7 @@ static int advancegame(gamelogic* logic) {
     finalhousekeeping();
     preparedisplay();
 
-    printf("(%d, %d), ", chippos() % 32, chippos() / 32);
+    // printf("(%d, %d), ", chippos() % 32, chippos() / 32);
     return r;
 }
 
